@@ -15,7 +15,7 @@ contract protectingData{
         return (assetValue);
     }  
     
-    function setAssetValue(uint value) public returns(string)
+    function setAssetValueV1(uint value) public returns(string)
     {
         if(creatorAddress!= msg.sender)
         {
@@ -27,4 +27,33 @@ contract protectingData{
             return "Asset value updated";
         } 
     }  
+
+    modifier CreatorOnlyV2{
+        if(creatorAddress!= msg.sender)
+        {
+            throw; //its depreciated, try not use. 
+        }
+        else
+        {
+            _;
+        }
+    }
+
+    function setAssetValueV2(uint value) public CreatorOnlyV2 returns(string)
+    {
+        assetValue = value;
+        return "Asset value updated"; 
+    } 
+
+    modifier CreatorOnlyV3{
+        require(creatorAddress== msg.sender); //https://medium.com/blockchannel/the-use-of-revert-assert-and-require-in-solidity-and-the-new-revert-opcode-in-the-evm-1a3a7990e06e
+        _;
+    } 
+
+    
+    function setAssetValueV3(uint value) public CreatorOnlyV3 returns(string)
+    {
+        assetValue = value;
+        return "Asset value updated"; 
+    } 
 }
